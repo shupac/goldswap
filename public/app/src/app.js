@@ -16,6 +16,7 @@ angular.module('app',
         login.name,
         upload.name,
     ])
+    .constant('FIREBASE_URL', 'https://goldswap.firebaseio.com')
     .controller('appController', appController)
     .config(config)
     .run(run);

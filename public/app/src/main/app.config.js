@@ -15,10 +15,15 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             template: '<app-login></app-login>',
             data: { protect: false }
         })
+        .state('signup', {
+            url: '/signup/:inviteToken',
+            template: '<app-login></app-login>',
+            data: { protect: false }
+        })
         .state('upload', {
             url: '/upload',
             template: '<app-upload></app-upload>',
-            data: { protect: false }
+            data: { protect: true }
         })
 }
 

@@ -4,7 +4,7 @@ function run($rootScope, $state, loginFactory) {
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
         if(!loginFactory.getUser() && toState.data.protect) {
             event.preventDefault();
-            $state.go('upload');
+            $state.go('login');
             $rootScope.returnState = toState;
         }
     });

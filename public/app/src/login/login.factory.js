@@ -15,6 +15,6 @@ function LoginFactory() {
         authenticate,
         getUser
     };
-};
+}
 
 export default LoginFactory;

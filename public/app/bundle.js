@@ -74,11 +74,15 @@
 
 	var _componentsComponents2 = _interopRequireDefault(_componentsComponents);
 
-	var _loginLogin = __webpack_require__(12);
+	var _loginLogin = __webpack_require__(17);
 
 	var _loginLogin2 = _interopRequireDefault(_loginLogin);
 
-	_angular2['default'].module('app', [_angularUiRouter2['default'], _componentsComponents2['default'].name, _loginLogin2['default'].name]).controller('appController', _mainAppController2['default']).config(_mainAppConfig2['default']).run(_mainAppRun2['default']);
+	var _uploadUpload = __webpack_require__(24);
+
+	var _uploadUpload2 = _interopRequireDefault(_uploadUpload);
+
+	_angular2['default'].module('app', [_angularUiRouter2['default'], _componentsComponents2['default'].name, _loginLogin2['default'].name, _uploadUpload2['default'].name]).controller('appController', _mainAppController2['default']).config(_mainAppConfig2['default']).run(_mainAppRun2['default']);
 
 /***/ },
 /* 1 */
@@ -35089,6 +35093,10 @@
 	        url: '/login',
 	        template: '<app-login></app-login>',
 	        data: { protect: false }
+	    }).state('upload', {
+	        url: '/upload',
+	        template: '<app-upload></app-upload>',
+	        data: { protect: false }
 	    });
 	}
 
@@ -35111,7 +35119,7 @@
 	    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
 	        if (!loginFactory.getUser() && toState.data.protect) {
 	            event.preventDefault();
-	            $state.go('login');
+	            $state.go('upload');
 	            $rootScope.returnState = toState;
 	        }
 	    });
@@ -35464,7 +35472,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	  value: true
+	    value: true
 	});
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -35473,7 +35481,11 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var components = _angular2['default'].module('app.components', []);
+	var _fileLoaderFileLoader = __webpack_require__(12);
+
+	var _fileLoaderFileLoader2 = _interopRequireDefault(_fileLoaderFileLoader);
+
+	var components = _angular2['default'].module('app.components', [_fileLoaderFileLoader2['default'].name]);
 
 	exports['default'] = components;
 	module.exports = exports['default'];
@@ -35494,15 +35506,11 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _loginComponent = __webpack_require__(13);
+	var _fileLoaderComponent = __webpack_require__(13);
 
-	var _loginComponent2 = _interopRequireDefault(_loginComponent);
+	var _fileLoaderComponent2 = _interopRequireDefault(_fileLoaderComponent);
 
-	var _loginFactory = __webpack_require__(18);
-
-	var _loginFactory2 = _interopRequireDefault(_loginFactory);
-
-	exports['default'] = _angular2['default'].module('app.login', []).directive('appLogin', _loginComponent2['default']).factory('loginFactory', _loginFactory2['default']);
+	exports['default'] = _angular2['default'].module('app.fileLoader', []).directive('fileLoader', _fileLoaderComponent2['default']);
 	module.exports = exports['default'];
 
 /***/ },
@@ -35517,15 +35525,132 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _loginTemplateHtml = __webpack_require__(14);
+	var _fileLoaderController = __webpack_require__(14);
+
+	var _fileLoaderController2 = _interopRequireDefault(_fileLoaderController);
+
+	__webpack_require__(15);
+
+	exports['default'] = function () {
+	    return {
+	        restrict: 'A',
+	        link: function link(scope, element, attributes) {
+	            element.bind('change', function (changeEvent) {
+	                scope.file = changeEvent.target.files[0];
+	            });
+	        }
+	    };
+	};
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	FileLoader.$inject = ["$scope"];
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	exports['default'] = FileLoader;
+
+	function FileLoader($scope) {
+	    'ngInject';
+	}
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(16);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(10)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/stylus-loader/index.js!./fileLoader.styl", function() {
+				var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/stylus-loader/index.js!./fileLoader.styl");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(9)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "", ""]);
+
+	// exports
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _angular = __webpack_require__(1);
+
+	var _angular2 = _interopRequireDefault(_angular);
+
+	var _loginComponent = __webpack_require__(18);
+
+	var _loginComponent2 = _interopRequireDefault(_loginComponent);
+
+	var _loginFactory = __webpack_require__(23);
+
+	var _loginFactory2 = _interopRequireDefault(_loginFactory);
+
+	exports['default'] = _angular2['default'].module('app.login', []).directive('appLogin', _loginComponent2['default']).factory('loginFactory', _loginFactory2['default']);
+	module.exports = exports['default'];
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _loginTemplateHtml = __webpack_require__(19);
 
 	var _loginTemplateHtml2 = _interopRequireDefault(_loginTemplateHtml);
 
-	var _loginController = __webpack_require__(15);
+	var _loginController = __webpack_require__(20);
 
 	var _loginController2 = _interopRequireDefault(_loginController);
 
-	__webpack_require__(16);
+	__webpack_require__(21);
 
 	exports['default'] = function () {
 	    return {
@@ -35539,13 +35664,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = "Login\n<div class=\"login\">\n    <button ng-click=login()>login</button>\n</div>\n"
 
 /***/ },
-/* 15 */
+/* 20 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -35564,13 +35689,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 16 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(17);
+	var content = __webpack_require__(22);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(10)(content, {});
@@ -35590,7 +35715,7 @@
 	}
 
 /***/ },
-/* 17 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(9)();
@@ -35604,7 +35729,7 @@
 
 
 /***/ },
-/* 18 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -35629,9 +35754,193 @@
 	        authenticate: authenticate,
 	        getUser: getUser
 	    };
-	};
+	}
 
 	exports['default'] = LoginFactory;
+	module.exports = exports['default'];
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _angular = __webpack_require__(1);
+
+	var _angular2 = _interopRequireDefault(_angular);
+
+	var _uploadComponent = __webpack_require__(25);
+
+	var _uploadComponent2 = _interopRequireDefault(_uploadComponent);
+
+	var _uploadFactory = __webpack_require__(30);
+
+	var _uploadFactory2 = _interopRequireDefault(_uploadFactory);
+
+	exports['default'] = _angular2['default'].module('app.upload', []).directive('appUpload', _uploadComponent2['default']).factory('uploadFactory', _uploadFactory2['default']);
+	module.exports = exports['default'];
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _uploadTemplateHtml = __webpack_require__(26);
+
+	var _uploadTemplateHtml2 = _interopRequireDefault(_uploadTemplateHtml);
+
+	var _uploadController = __webpack_require__(27);
+
+	var _uploadController2 = _interopRequireDefault(_uploadController);
+
+	__webpack_require__(28);
+
+	exports['default'] = function () {
+	    return {
+	        template: _uploadTemplateHtml2['default'],
+	        controller: _uploadController2['default']
+	    };
+	};
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	module.exports = "<h1>UPLOAD</h1>\n<form ng-submit=submit()>\n    <input type=\"file\" file-loader />\n    <input type=\"submit\" id=\"submit\" value=\"Submit\" />\n</form>\n"
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	UploadController.$inject = ["$scope", "uploadFactory"];
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	function UploadController($scope, uploadFactory) {
+	    'ngInject';
+
+	    $scope.submit = function () {
+	        uploadFactory.upload($scope.file);
+	    };
+	}
+
+	exports['default'] = UploadController;
+	module.exports = exports['default'];
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(29);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(10)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/stylus-loader/index.js!./upload.styl", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/stylus-loader/index.js!./upload.styl");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(9)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "", ""]);
+
+	// exports
+
+
+/***/ },
+/* 30 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	UploadFactory.$inject = ["$http"];
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	exports['default'] = UploadFactory;
+
+	function UploadFactory($http) {
+	    'ngInject';
+
+	    function getSignedRequest(file) {
+	        return $http.get('/sign_s3?file_name=' + file.name + '&file_type' + file.type).then(function (response) {
+	            if (response.status === 200) return uploadFile(file, response.data.signed_request, response.data.url);
+	        });
+	    }
+
+	    function get_signed_request(file) {
+	        var xhr = new XMLHttpRequest();
+	        xhr.open("GET", "/sign_s3?file_name=" + file.name + "&file_type=" + file.type);
+	        xhr.onreadystatechange = function () {
+	            if (xhr.readyState === 4) {
+	                if (xhr.status === 200) {
+	                    var response = JSON.parse(xhr.responseText);
+	                    uploadFile(file, response.signed_request, response.url);
+	                } else {
+	                    alert("Could not get signed URL.");
+	                }
+	            }
+	        };
+	        xhr.send();
+	    }
+
+	    function uploadFile(file, signedRequest, url) {
+	        console.log(signedRequest);
+	        var xhr = new XMLHttpRequest();
+	        xhr.onreadystatechange = function (e) {
+	            if (this.readyState === 4) {
+	                debugger;
+	            }
+	        };
+	        xhr.open('PUT', signedRequest, true);
+	        // xhr.setRequestHeader('Content-Type',"application/octet-stream");
+	        xhr.send(file);
+	    }
+
+	    return {
+	        upload: get_signed_request
+	    };
+	}
+
+	;
 	module.exports = exports['default'];
 
 /***/ }

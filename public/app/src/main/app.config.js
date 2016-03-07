@@ -14,7 +14,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             url: '/login',
             template: '<app-login></app-login>',
             data: { protect: false }
-        });
+        })
+        .state('upload', {
+            url: '/upload',
+            template: '<app-upload></app-upload>',
+            data: { protect: false }
+        })
 }
 
 export default config;

@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var s3 = require('./routes/s3');
 
 var app = express();
 
@@ -22,7 +23,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/login', routes);
+app.use('/upload', routes);
 app.use('/users', users);
+app.use('/sign_s3', s3);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

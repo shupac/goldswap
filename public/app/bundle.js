@@ -78,11 +78,15 @@
 
 	var _loginLogin2 = _interopRequireDefault(_loginLogin);
 
-	var _uploadUpload = __webpack_require__(25);
+	var _homeHome = __webpack_require__(25);
+
+	var _homeHome2 = _interopRequireDefault(_homeHome);
+
+	var _uploadUpload = __webpack_require__(31);
 
 	var _uploadUpload2 = _interopRequireDefault(_uploadUpload);
 
-	_angular2['default'].module('app', [_angularUiRouter2['default'], _componentsComponents2['default'].name, _loginLogin2['default'].name, _uploadUpload2['default'].name]).constant('FIREBASE_URL', 'https://goldswap.firebaseio.com').controller('appController', _mainAppController2['default']).config(_mainAppConfig2['default']).run(_mainAppRun2['default']);
+	_angular2['default'].module('app', [_angularUiRouter2['default'], _componentsComponents2['default'].name, _loginLogin2['default'].name, _homeHome2['default'].name, _uploadUpload2['default'].name]).constant('FIREBASE_URL', 'https://goldswap.firebaseio.com').controller('appController', _mainAppController2['default']).config(_mainAppConfig2['default']).run(_mainAppRun2['default']);
 
 /***/ },
 /* 1 */
@@ -35087,7 +35091,7 @@
 
 	    $stateProvider.state('home', {
 	        url: '/',
-	        template: '<h1>HOME</h1>',
+	        template: '<app-home></app-home>',
 	        data: { protect: true }
 	    }).state('login', {
 	        url: '/login',
@@ -35183,7 +35187,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  height: 100%;\n  font-family: 'OpenSans-Light', sans-serif;\n  margin: 0;\n}\n.container {\n  padding: 20px;\n}\n", ""]);
+	exports.push([module.id, "body {\n  height: 100%;\n  font-family: 'OpenSans-Light', sans-serif;\n  margin: 0;\n}\n.container {\n  padding: 20px;\n  text-align: center;\n}\n", ""]);
 
 	// exports
 
@@ -35671,7 +35675,7 @@
 /* 19 */
 /***/ function(module, exports) {
 
-	module.exports = "Login\n<div class=\"login\">\n    <button ng-click=login()>login</button>\n    <button ng-click=logout()>logout</button>\n</div>\n"
+	module.exports = "<div class=\"home\">\n    <h1>Goldswap</h1>\n    <img class=\"chest\" src=\"app/images/gold.png\" />\n    <div class=\"login\">\n        <button class=\"btn btn-google\" ng-click=login()>Login with Google</button>\n    </div>\n</div>\n"
 
 /***/ },
 /* 20 */
@@ -35679,11 +35683,11 @@
 
 	'use strict';
 
-	LoginController.$inject = ["$scope", "$stateParams", "loginFactory"];
+	LoginController.$inject = ["$scope", "$stateParams", "loginFactory", "$rootScope", "$state"];
 	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
-	function LoginController($scope, $stateParams, loginFactory) {
+	function LoginController($scope, $stateParams, loginFactory, $rootScope, $state) {
 	    'ngInject';
 
 	    var inviteToken = $stateParams.inviteToken;
@@ -35691,12 +35695,12 @@
 	    $scope.login = function () {
 	        loginFactory.login(inviteToken).then(function () {
 	            console.log('sign up done');
+	            $state.go($rootScope.returnState || 'home');
 	        }, function () {
 	            console.log('not authorized');
+	            alert('You are not authorized');
 	        });
 	    };
-
-	    $scope.logout = loginFactory.logout;
 	}
 
 	exports['default'] = LoginController;
@@ -35737,7 +35741,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, ".home img {\n  margin-bottom: 20px;\n}\n.home h1 {\n  margin-top: 50px;\n}\n", ""]);
 
 	// exports
 
@@ -35782,6 +35786,7 @@
 	            });
 	        } else {
 	            console.log("User is logged out");
+	            userId = null;
 	        }
 	    }
 
@@ -35797,7 +35802,7 @@
 	                        userId = authData.uid;
 	                        deferred.resolve();
 	                    } else if (inviteToken) {
-	                        signup(inviteToken).then(function () {
+	                        signup(inviteToken, authData.google.email).then(function () {
 	                            userId = authData.uid;
 	                            createUser(authData).then(deferred.resolve);
 	                        }, function () {
@@ -35812,11 +35817,10 @@
 	        return deferred.promise;
 	    }
 
-	    function signup(token) {
+	    function signup(token, email) {
 	        var deferred = $q.defer();
-	        fbRef.child('invites').once('value', function (snapshot) {
-	            var data = snapshot.val();
-	            if (snapshot.child(token).exists()) {
+	        fbRef.child('invites').child(token).once('value', function (snapshot) {
+	            if (snapshot.val() === email) {
 	                console.log('signup authorized');
 	                deferred.resolve();
 	            } else {
@@ -35834,7 +35838,7 @@
 	            name: authData.google.displayName,
 	            avatar: authData.google.profileImageURL
 	        }, function (err) {
-	            deferred.resolve;
+	            deferred.resolve();
 	        });
 	        return deferred.promise;
 	    }
@@ -36155,15 +36159,11 @@
 
 	var _angular2 = _interopRequireDefault(_angular);
 
-	var _uploadComponent = __webpack_require__(26);
+	var _homeComponent = __webpack_require__(26);
 
-	var _uploadComponent2 = _interopRequireDefault(_uploadComponent);
+	var _homeComponent2 = _interopRequireDefault(_homeComponent);
 
-	var _uploadFactory = __webpack_require__(31);
-
-	var _uploadFactory2 = _interopRequireDefault(_uploadFactory);
-
-	exports['default'] = _angular2['default'].module('app.upload', []).directive('appUpload', _uploadComponent2['default']).factory('uploadFactory', _uploadFactory2['default']);
+	exports['default'] = _angular2['default'].module('app.home', []).directive('appHome', _homeComponent2['default']);
 	module.exports = exports['default'];
 
 /***/ },
@@ -36178,15 +36178,141 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _uploadTemplateHtml = __webpack_require__(27);
+	var _homeTemplateHtml = __webpack_require__(27);
+
+	var _homeTemplateHtml2 = _interopRequireDefault(_homeTemplateHtml);
+
+	var _homeController = __webpack_require__(28);
+
+	var _homeController2 = _interopRequireDefault(_homeController);
+
+	__webpack_require__(29);
+
+	exports['default'] = function () {
+	    return {
+	        template: _homeTemplateHtml2['default'],
+	        controller: _homeController2['default'],
+	        restrict: 'E'
+	    };
+	};
+
+	;
+	module.exports = exports['default'];
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	module.exports = "    <button ng-click=logout()>logout</button>\n"
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	function HomeController($scope, loginFactory, $state) {
+
+	    $scope.logout = function () {
+	        loginFactory.logout();
+	        $state.go('login');
+	    };
+	}
+
+	exports['default'] = HomeController;
+	module.exports = exports['default'];
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(30);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(10)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/stylus-loader/index.js!./home.styl", function() {
+				var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/stylus-loader/index.js!./home.styl");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(9)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".btn-google {\n  color: #fff;\n  background-color: #dd4b39;\n  border-color: rgba(0,0,0,0.2);\n}\n.btn-google:focus,\n.btn-google.focus {\n  color: #fff;\n  background-color: #c23321;\n  border-color: rgba(0,0,0,0.2);\n}\n.btn-google:hover {\n  color: #fff;\n  background-color: #c23321;\n  border-color: rgba(0,0,0,0.2);\n}\n.btn-google:active,\n.btn-google.active,\n.open>.dropdown-toggle.btn-google {\n  color: #fff;\n  background-color: #c23321;\n  border-color: rgba(0,0,0,0.2);\n}\n.btn-google:active:hover,\n.btn-google.active:hover,\n.open>.dropdown-toggle.btn-google:hover,\n.btn-google:active:focus,\n.btn-google.active:focus,\n.open>.dropdown-toggle.btn-google:focus,\n.btn-google:active.focus,\n.btn-google.active.focus,\n.open>.dropdown-toggle.btn-google.focus {\n  color: #fff;\n  background-color: #a32b1c;\n  border-color: rgba(0,0,0,0.2);\n}\n.btn-google:active,\n.btn-google.active,\n.open>.dropdown-toggle.btn-google {\n  background-image: none;\n}\n.btn-google.disabled,\n.btn-google[disabled],\nfieldset[disabled] .btn-google,\n.btn-google.disabled:hover,\n.btn-google[disabled]:hover,\nfieldset[disabled] .btn-google:hover,\n.btn-google.disabled:focus,\n.btn-google[disabled]:focus,\nfieldset[disabled] .btn-google:focus,\n.btn-google.disabled.focus,\n.btn-google[disabled].focus,\nfieldset[disabled] .btn-google.focus,\n.btn-google.disabled:active,\n.btn-google[disabled]:active,\nfieldset[disabled] .btn-google:active,\n.btn-google.disabled.active,\n.btn-google[disabled].active,\nfieldset[disabled] .btn-google.active {\n  background-color: #dd4b39;\n  border-color: rgba(0,0,0,0.2);\n}\n.btn-google .badge {\n  color: #dd4b39;\n  background-color: #fff;\n}\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _angular = __webpack_require__(1);
+
+	var _angular2 = _interopRequireDefault(_angular);
+
+	var _uploadComponent = __webpack_require__(32);
+
+	var _uploadComponent2 = _interopRequireDefault(_uploadComponent);
+
+	var _uploadFactory = __webpack_require__(37);
+
+	var _uploadFactory2 = _interopRequireDefault(_uploadFactory);
+
+	exports['default'] = _angular2['default'].module('app.upload', []).directive('appUpload', _uploadComponent2['default']).factory('uploadFactory', _uploadFactory2['default']);
+	module.exports = exports['default'];
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _uploadTemplateHtml = __webpack_require__(33);
 
 	var _uploadTemplateHtml2 = _interopRequireDefault(_uploadTemplateHtml);
 
-	var _uploadController = __webpack_require__(28);
+	var _uploadController = __webpack_require__(34);
 
 	var _uploadController2 = _interopRequireDefault(_uploadController);
 
-	__webpack_require__(29);
+	__webpack_require__(35);
 
 	exports['default'] = function () {
 	    return {
@@ -36199,13 +36325,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 27 */
+/* 33 */
 /***/ function(module, exports) {
 
 	module.exports = "<h1>UPLOAD</h1>\n<form ng-submit=submit()>\n    <input type=\"file\" file-loader />\n    <input type=\"submit\" id=\"submit\" value=\"Submit\" />\n</form>\n"
 
 /***/ },
-/* 28 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36226,13 +36352,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 29 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(30);
+	var content = __webpack_require__(36);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(10)(content, {});
@@ -36252,7 +36378,7 @@
 	}
 
 /***/ },
-/* 30 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(9)();
@@ -36266,7 +36392,7 @@
 
 
 /***/ },
-/* 31 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';

@@ -7,6 +7,7 @@ import './main/app.styl';
 
 import components from './components/components';
 import login from './login/login';
+import home from './home/home';
 import upload from './upload/upload';
 
 angular.module('app',
@@ -14,6 +15,7 @@ angular.module('app',
         uiRouter,
         components.name,
         login.name,
+        home.name,
         upload.name,
     ])
     .constant('FIREBASE_URL', 'https://goldswap.firebaseio.com')

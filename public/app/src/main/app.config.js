@@ -7,7 +7,7 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
     $stateProvider
         .state('home', {
             url: '/',
-            template: '<h1>HOME</h1>',
+            template: '<app-home></app-home>',
             data: { protect: true }
         })
         .state('login', {

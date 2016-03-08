@@ -23,6 +23,7 @@ function LoginFactory(FIREBASE_URL, $q) {
             });
         } else {
             console.log("User is logged out");
+            userId = null;
         }
     }
 
@@ -39,7 +40,7 @@ function LoginFactory(FIREBASE_URL, $q) {
                         deferred.resolve();
                     }
                     else if (inviteToken) {
-                        signup(inviteToken).then(function() {
+                        signup(inviteToken, authData.google.email).then(function() {
                             userId = authData.uid;
                             createUser(authData).then(deferred.resolve);
                         }, function() {
@@ -55,11 +56,10 @@ function LoginFactory(FIREBASE_URL, $q) {
         return deferred.promise;
     }
 
-    function signup(token) {
+    function signup(token, email) {
         var deferred = $q.defer();
-        fbRef.child('invites').once('value', function(snapshot) {
-            var data = snapshot.val();
-            if (snapshot.child(token).exists()) {
+        fbRef.child('invites').child(token).once('value', function(snapshot) {
+            if (snapshot.val() === email) {
                 console.log('signup authorized');
                 deferred.resolve();
             }
@@ -78,7 +78,7 @@ function LoginFactory(FIREBASE_URL, $q) {
             name: authData.google.displayName,
             avatar: authData.google.profileImageURL
         }, function(err) {
-            deferred.resolve;
+            deferred.resolve();
         });
         return deferred.promise;
     }

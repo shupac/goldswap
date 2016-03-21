@@ -24,7 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/signup', routes);
 app.use('/login', routes);
-app.use('/upload', routes);
+app.use('/profile', routes);
+app.use('/month/*', routes);
 app.use('/users', users);
 app.use('/sign_s3', s3);
 

@@ -1,9 +1,7 @@
-function HomeController($scope, loginFactory, $state) {
+function HomeController($scope, FIREBASE_URL, $firebaseArray, $firebaseObject) {
+    var fbRef = new Firebase(FIREBASE_URL);
 
-    $scope.logout = function() {
-        loginFactory.logout();
-        $state.go('login');
-    };
+    $scope.tracks = $firebaseArray(fbRef.child('tracks'));
 }
 
 export default HomeController;

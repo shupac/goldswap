@@ -1,45 +1,48 @@
-export default function UploadFactory($http) {
+export default function UploadFactory($http, $q) {
     'ngInject'
 
     function getSignedRequest(file) {
-        return $http
-            .get('/sign_s3?file_name=' + file.name + '&file_type' + file.type)
-            .then(function(response) {
-                if (response.status === 200) return uploadFile(file, response.data.signed_request, response.data.url);
-            });
-    }
-
-    function get_signed_request(file){
+        var deferred = $q.defer();
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/sign_s3?file_name="+file.name+"&file_type="+file.type);
-        xhr.onreadystatechange = function(){
+        xhr.onreadystatechange = function() {
             if(xhr.readyState === 4){
-                if(xhr.status === 200){
+                if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
-                    uploadFile(file, response.signed_request, response.url);
+                    deferred.resolve({
+                        file: file,
+                        signedReq: response.signed_request,
+                        url: response.url
+                    });
                 }
-                else{
-                    alert("Could not get signed URL.");
+                else {
+                    deferred.reject('Could not get signed URL.');
                 }
             }
         };
         xhr.send();
+        return deferred.promise;
     }
 
-    function uploadFile(file, signedRequest, url) {
-        console.log(signedRequest);
+    function uploadFile(data) {
+        var deferred = $q.defer();
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function(e) {
             if (this.readyState === 4) {
-                debugger
+                if (xhr.status === 200) deferred.resolve(data.url);
+                else deferred.reject();
             }
         };
-        xhr.open('PUT', signedRequest, true);
-        // xhr.setRequestHeader('Content-Type',"application/octet-stream");
-        xhr.send(file);
+        xhr.open('PUT', data.signedReq, true);
+        xhr.send(data.file);
+        return deferred.promise;
+    }
+
+    function upload(file) {
+        return getSignedRequest(file).then(uploadFile);
     }
 
     return {
-        upload: get_signed_request
+        upload
     };
 };

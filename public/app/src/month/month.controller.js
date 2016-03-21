@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-function MonthController($scope, $state, $stateParams, $filter, tracksFactory) {
+function MonthController($scope, $state, $stateParams, $filter, tracksFactory, playerFactory) {
     'ngInject'
 
     var month = moment($stateParams.month, "YYYY-MM");
@@ -10,6 +10,10 @@ function MonthController($scope, $state, $stateParams, $filter, tracksFactory) {
 
     $scope.upload = function() {
         $state.go('upload', { month: $scope.month });
+    };
+
+    $scope.load = function(track) {
+        playerFactory.loadTrack(track);
     };
 }
 

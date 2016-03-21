@@ -4,7 +4,7 @@
         <th>Topic Track</th>
         <th>Pirate</th>
     </tr>
-    <tr ng-repeat="track in tracks">
+    <tr class="track-item" ng-repeat="track in tracks" ng-dblclick="load(track)">
         <td ng-if="track.month===month">{{ track.artist }} - {{ track.topic | topic }}</td>
         <td ng-if="track.month===month">{{ track.userId | user }}</td>
     </tr>

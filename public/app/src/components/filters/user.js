@@ -1,4 +1,6 @@
 export default function($http, FIREBASE_URL) {
+    'ngInject'
+
     var cache = {};
     var token = JSON.parse(localStorage['firebase:session::goldswap']).token;
 

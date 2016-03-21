@@ -1,6 +1,8 @@
 import moment from 'moment';
 
 function HomeController($scope, $state, tracksFactory, playerFactory) {
+    'ngInject'
+
     $scope.tracks = tracksFactory;
 
     $scope.goMonth = function() {

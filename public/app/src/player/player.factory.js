@@ -1,4 +1,6 @@
 export default function() {
+    'ngInject'
+
     var track;
     return {
         loadTrack: function(newTrack) {

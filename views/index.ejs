@@ -13,7 +13,7 @@
     </head>
     <body ng-controller="appController">
         <div class="container" id="container">
-            <app-nav></app-nav>
+            <app-nav ng-if="showNav"></app-nav>
             <div ui-view></div>
         </div>
         <app-player ng-if="showPlayer"></app-player>

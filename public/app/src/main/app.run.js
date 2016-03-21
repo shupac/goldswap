@@ -2,10 +2,13 @@ function run($rootScope, $state, loginFactory) {
     'ngInject'
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
-        if(!loginFactory.getUser() && toState.data.protect) {
+        $rootScope.showPlayer = toState.data.player;
+        if (!loginFactory.getUser() && toState.data.protect) {
+            $rootScope.showPlayer = false;
             event.preventDefault();
             $state.go('login');
             $rootScope.returnState = toState;
+            $rootScope.returnParams = toParams;
         }
     });
 };

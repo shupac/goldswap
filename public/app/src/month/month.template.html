@@ -1,16 +1,14 @@
+<h1>{{ displayMonth }}</h1>
 <table class="table table-striped">
     <tr>
-        <th>Artist</th>
-        <th>Title</th>
-        <th>Remixer</th>
-        <th>Month</th>
+        <th>Topic Track</th>
         <th>Pirate</th>
     </tr>
     <tr ng-repeat="track in tracks">
-        <td>{{ track.artist }}</td>
-        <td>{{ track.title }}</td>
-        <td>{{ track.remixer }}</td>
-        <td>{{ track.month }}</td>
-        <td>{{ track.userId | user:users }}</td>
+        <td ng-if="track.month===month">{{ track.artist }} - {{ track.topic | topic }}</td>
+        <td ng-if="track.month===month">{{ track.userId | user }}</td>
     </tr>
 </table>
+<div>
+    <button ng-click="upload()">Upload Topic Track</button>
+</div>

@@ -13,7 +13,6 @@ export default function($http, FIREBASE_URL) {
                 url: FIREBASE_URL + '/users/' + userId + '.json?auth=' + JSON.parse(localStorage['firebase:session::goldswap']).token
             }).then(function(res) {
                 cache[userId] = res.data.name;
-                console.log('found new user', res.data.name);
             });
         }
     }

@@ -11,21 +11,11 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <script src="app/bundle.js"></script>
     </head>
-    <header>
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Menu</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-right">
-                <li><a href="/profile">Profile</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#" ng-click="logout()">Logout</a></li>
-            </ul>
-        </div>
-    </header>
     <body ng-controller="appController">
         <div class="container" id="container">
+            <app-nav></app-nav>
             <div ui-view></div>
         </div>
+        <app-player ng-if="showPlayer"></app-player>
     </body>
 </html>

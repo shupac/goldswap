@@ -1,0 +1,7 @@
+<div id="player">
+    <audio src="{{ track().url }}" autoplay preload="auto" controls></audio>
+    <div ng-if="track()">
+        <div>{{ track().artist }} - {{ track().title }}</div>
+        <div><a href="{{ track().url }}" download>Download</a>
+    </div>
+</div>

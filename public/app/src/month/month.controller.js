@@ -1,12 +1,13 @@
-function MonthController($scope, loginFactory, $state, FIREBASE_URL, $firebaseArray, $firebaseObject) {
+import moment from 'moment';
 
-    var fbRef = new Firebase(FIREBASE_URL);
+function MonthController($scope, $state, $stateParams, $filter, tracksFactory) {
+    var month = moment($stateParams.month, "YYYY-MM");
+    $scope.month = $stateParams.month;
+    $scope.displayMonth = month.format('MMMM YYYY');
+    $scope.tracks = tracksFactory;
 
-    $scope.tracks = $firebaseArray(fbRef.child('tracks'));
-
-    $scope.logout = function() {
-        loginFactory.logout();
-        $state.go('login');
+    $scope.upload = function() {
+        $state.go('upload', { month: $scope.month });
     };
 }
 

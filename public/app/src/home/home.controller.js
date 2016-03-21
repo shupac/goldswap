@@ -1,7 +1,16 @@
-function HomeController($scope, FIREBASE_URL, $firebaseArray, $firebaseObject) {
-    var fbRef = new Firebase(FIREBASE_URL);
+import moment from 'moment';
 
-    $scope.tracks = $firebaseArray(fbRef.child('tracks'));
+function HomeController($scope, $state, tracksFactory, playerFactory) {
+    $scope.tracks = tracksFactory;
+
+    $scope.goMonth = function() {
+        var month = moment().format('YYYY[-]MM');
+        $state.go('month', { month: month });
+    };
+
+    $scope.load = function(track) {
+        playerFactory.loadTrack(track);
+    };
 }
 
 export default HomeController;

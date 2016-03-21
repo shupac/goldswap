@@ -6,7 +6,7 @@ function LoginController($scope, $stateParams, loginFactory, $rootScope, $state)
     $scope.login = function() {
         loginFactory.login(inviteToken).then(function() {
             console.log('sign up done');
-            $state.go($rootScope.returnState || 'home');
+            $state.go($rootScope.returnState || 'home', $rootScope.returnParams);
         }, function() {
             console.log('not authorized');
             alert('You are not authorized');

@@ -1,1 +1,24 @@
 <h1>Profile</h1>
+<div class="profile">
+    <form name="info">
+    <table>
+    <colgroup>
+    <col style="width: 110px">
+    <col style="width: 200px">
+    </colgroup>
+        <tr>
+            <th>Display Name</th>
+            <td>
+                <span ng-hide="editable">{{ userInfo().name }}</span>
+                <input type="text" name="name" ng-model="userInfo().name" ng-show="editable" ng-required=true>
+                <div role="alert">
+                    <span class="error" ng-show="info.name.$error.required">Required!</span>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+    <button ng-click="edit()" ng-hide="editable">Edit</button>
+    <button ng-click="saveInfo()" class="save" ng-show="editable" ng-disabled="!info.$valid">Save</button>
+    <span class="saved" ng-show="saved">Saved!</span>
+</div>

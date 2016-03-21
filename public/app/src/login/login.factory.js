@@ -1,40 +1,48 @@
 import Firebase from 'firebase';
 
-function LoginFactory(FIREBASE_URL, $q) {
+function LoginFactory(firebaseFactory, $q, $rootScope) {
     'ngInject'
 
-    var fbRef = new Firebase(FIREBASE_URL);
-    var userId = null;
+    var userId;
+    var userInfo;
 
-    fbRef.onAuth(authDataCallback);
+    firebaseFactory.onAuth(authDataCallback);
 
     function getUser() {
         return userId;
     }
 
+    function getUserInfo() {
+        return userInfo;
+    }
+
     function authDataCallback(authData) {
         if (authData) {
-            console.log("User " + authData.uid + " is logged in with " + authData.provider);
+            // console.log('User ' + authData.uid + ' is logged in with ' + authData.provider);
             userId = authData.uid;
-            fbRef.child('users').once('value', function(snapshot) {
+            userInfo = authData.google;
+            firebaseFactory.child('users').once('value', function(snapshot) {
                 if (snapshot.child(authData.uid).exists()) {
-                    userId = authData.uid;
+                    $rootScope.$apply(function() {
+                        userId = authData.uid;
+                        userInfo = snapshot.val()[userId];
+                    });
                 }
             });
         } else {
-            console.log("User is logged out");
+            console.log('User is logged out');
             userId = null;
         }
     }
 
     function login(inviteToken) {
         var deferred = $q.defer();
-        fbRef.authWithOAuthPopup('google', function(error, authData) {
+        firebaseFactory.authWithOAuthPopup('google', function(error, authData) {
             if (error) {
                 console.log('Login Failed!', error);
             } else {
                 console.log('Authenticated successfully:', authData);
-                fbRef.child('users').once('value', function(snapshot) {
+                firebaseFactory.child('users').once('value', function(snapshot) {
                     if (snapshot.child(authData.uid).exists()) {
                         userId = authData.uid;
                         deferred.resolve();
@@ -58,7 +66,7 @@ function LoginFactory(FIREBASE_URL, $q) {
 
     function signup(token, email) {
         var deferred = $q.defer();
-        fbRef.child('invites').child(token).once('value', function(snapshot) {
+        firebaseFactory.child('invites').child(token).once('value', function(snapshot) {
             if (snapshot.val() === email) {
                 console.log('signup authorized');
                 deferred.resolve();
@@ -73,7 +81,7 @@ function LoginFactory(FIREBASE_URL, $q) {
 
     function createUser(authData) {
         var deferred = $q.defer();
-        fbRef.child('users').child(authData.uid).set({
+        firebaseFactory.child('users').child(authData.uid).set({
             email: authData.google.email,
             name: authData.google.displayName,
             avatar: authData.google.profileImageURL
@@ -83,15 +91,25 @@ function LoginFactory(FIREBASE_URL, $q) {
         return deferred.promise;
     }
 
+    function saveInfo() {
+        var deferred = $q.defer();
+        firebaseFactory.child('users').child(userId).set(userInfo, deferred.resolve);
+        return deferred.promise;
+    }
+
     function logout() {
-        fbRef.unauth();
+        var deferred = $q.defer();
+        firebaseFactory.unauth(deferred.resolve);
+        return deferred.promise;
     }
 
     return {
         login,
         logout,
         signup,
-        getUser
+        getUser,
+        getUserInfo,
+        saveInfo
     };
 }
 

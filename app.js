@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/signup', routes);
+app.use('/signup/*', routes);
 app.use('/login', routes);
 app.use('/profile', routes);
 app.use('/month/*', routes);

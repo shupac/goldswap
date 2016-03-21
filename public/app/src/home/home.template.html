@@ -1,16 +1,19 @@
+<h1>All Tracks</h1>
 <table class="table table-striped">
     <tr>
         <th>Artist</th>
         <th>Title</th>
-        <th>Remixer</th>
         <th>Month</th>
+        <th>Topic</th>
         <th>Pirate</th>
     </tr>
-    <tr ng-repeat="track in tracks">
+    <tr class="track-item" ng-repeat="track in tracks" ng-dblclick="load(track)">
         <td>{{ track.artist }}</td>
         <td>{{ track.title }}</td>
-        <td>{{ track.remixer }}</td>
         <td>{{ track.month }}</td>
-        <td>{{ track.userId | user:users }}</td>
+        <td>{{ track.topic | topic }}</td>
+        <td>{{ track.userId | user }}</td>
     </tr>
 </table>
+
+<a href="#" ng-click="goMonth()">Go to this Month</a>

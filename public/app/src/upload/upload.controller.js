@@ -1,32 +1,35 @@
-function UploadController($scope, $stateParams, uploadFactory, loginFactory, FIREBASE_URL) {
+function UploadController($scope, $stateParams, uploadFactory, loginFactory, firebaseFactory) {
     'ngInject'
-
-    var fbRef = new Firebase(FIREBASE_URL);
 
     $scope.month = $stateParams.month;
     console.log($scope.month);
 
     $scope.submit = function() {
+        $scope.uploading = true;
         uploadFactory.upload($scope.file).then(function(url) {
             console.log('controller:', url, 'month', $scope.month);
             updateFirebase(url);
+            alert('uploaded!');
+            $scope.uploading = false;
+            window.location.reload();
         });
     };
 
     function updateFirebase(url) {
-        var trackId = fbRef.child('tracks').push({
+        var trackRef = firebaseFactory.child('tracks').push({
             artist: $scope.artist,
             title: $scope.title,
             remixer: $scope.remixer || null,
-            url: url,
+            url: encodeURI(url),
             userId: loginFactory.getUser(),
             month: $scope.month
         }, function(err) {
             if (err) console.log(err);
             else console.log('finished');
-            fbRef.child('month').child($scope.month).push({
-                trackId: trackId.key()
-            });
+            // firebaseFactory.child('month').child($scope.month).push({
+            //     trackId: trackRef.key()
+            // });
+            trackRef.child('topic').set(trackRef.key());
         });
     }
 }

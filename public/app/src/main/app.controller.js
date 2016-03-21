@@ -2,8 +2,9 @@ function AppController($scope, $state, loginFactory) {
     'ngInject'
 
     $scope.logout = function() {
-        loginFactory.logout();
-        $state.go('login');
+        loginFactory.logout().then(function() {
+            $state.go('login');
+        });
     };
 }
 
